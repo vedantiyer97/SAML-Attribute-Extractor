@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>File Upload</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 28px;
+    }
+    .container {
+      display: flex;
+      justify-content: space-between;
+    }
+    .upload-form, .response {
+      width: 45%;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    .response {
+      overflow-wrap: break-word;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <!-- Upload Form -->
+  <div class="upload-form">
+    <h2>Upload File</h2>
+    <form id="fileUploadForm" enctype="multipart/form-data">
+      <input type="file" name="file" id="fileInput" accept=".txt,.pdf,.doc,.docx">
+      <br><br>
+      <button type="button" onclick="uploadFile()">Upload</button>
+    </form>
+  </div>
+  <!-- Response Section -->
+  <div class="response" id="response">
+    <h2>Response</h2>
+  </div>
+</div>
+
+<script>
+  function uploadFile() {
+    var fileInput = document.getElementById('fileInput');
+    var file = fileInput.files[0];
+
+    var formData = new FormData();
+    formData.append('file', file);
+
+    fetch('/sendFile', {
+      method: 'POST',
+      body: formData
+    })
+            .then(response => response.text())
+            .then(data => {
+              document.getElementById('response').innerHTML = data;
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              alert('An error occurred while uploading the file!');
+            });
+  }
+</script>
+</body>
+</html>
